@@ -1,14 +1,14 @@
-import { Pelicula, nombreClases, TipoFlecha, ListaPeliculasConfiguracion } from "./modelo";
-import { flechas } from "./constantes";
-import { filtrarPeliculas } from "./motor";
+import { Movie, classNames, arrowType, movieListConfig } from "./model";
+import { arrows } from "./constantes";
+import { filterMovies } from "./motor";
 
-const añadirFlecha = (contenedor: HTMLDivElement, tipo: TipoFlecha): void => {
-  const divFlecha = document.createElement("div");
-  divFlecha.className = `flecha-${tipo}`;
-  const imgFlecha = document.createElement("img");
-  imgFlecha.src = tipo === "izquierda" ? flechas.left : flechas.right;
-  divFlecha.appendChild(imgFlecha);
-  divFlecha.addEventListener("click", () => {
+const addArrow = (contenedor: HTMLDivElement, tipo: arrowType): void => {
+  const arrowDiv = document.createElement("div");
+  arrowDiv.className = `flecha-${tipo}`;
+  const arrowImg = document.createElement("img");
+  arrowImg.src = tipo === "izquierda" ? arrows.left : arrows.right;
+  arrowDiv.appendChild(arrowImg);
+  arrowDiv.addEventListener("click", () => {
     if (tipo === "izquierda") {
       contenedor.scrollBy({
         left: -contenedor.clientWidth,
@@ -21,120 +21,72 @@ const añadirFlecha = (contenedor: HTMLDivElement, tipo: TipoFlecha): void => {
       });
     }
   });
-  contenedor.appendChild(divFlecha);
+  contenedor.appendChild(arrowDiv);
 };
-const crearTitulo = (tituloSeccion: string): HTMLHeadingElement => {
+const createTitle = (titleSection: string): HTMLHeadingElement => {
   const titulo = document.createElement("h2");
-  titulo.textContent = tituloSeccion;
+  titulo.textContent = titleSection;
   return titulo;
 };
 
-const crearContenedor = (nombreClase: string, contenedor: HTMLDivElement): HTMLDivElement => {
+const createContainer = (
+  className: string,
+  container: HTMLDivElement
+): HTMLDivElement => {
   const div = document.createElement("div");
-  div.classList.add(nombreClase); //add class
-  div.id = nombreClase; //add id
-  contenedor.appendChild(div);
+  div.classList.add(className); //add class
+  div.id = className; //add id
+  container.appendChild(div);
   return div;
-}; //here we create a container,add the div with the list of pelis and give it an id. Returns the div
-
-//asi era antes for comparison
-// const listaPeliculas = document.createElement("div");
-//   listaPeliculas.classList.add(nombreClase); //add class
-//   listaPeliculas.id = nombreClase; //add id
-//   return listaPeliculas;
-
-
-const agregarTitulo = (
-    tituloSeccion: string, 
-    contenedor: HTMLDivElement
-): void => {
-  const titulo = crearTitulo(tituloSeccion);
-  contenedor.appendChild(titulo);
 };
 
-const pintarFlechas = (peliculaContenedor: HTMLDivElement): void => {
-  añadirFlecha(peliculaContenedor, 'izquierda');
-  añadirFlecha(peliculaContenedor, 'derecha');
+const addTitle = (titleSection: string, container: HTMLDivElement): void => {
+  const title = createTitle(titleSection);
+  container.appendChild(title);
 };
 
-const pintarPelicula = (
-  pelicula: Pelicula,
-  peliculaContendor: HTMLDivElement
-): void => {
-  const divPelicula = crearContenedor(nombreClases.pelicula, peliculaContendor);
+const showArrows = (movieContainer: HTMLDivElement): void => {
+  addArrow(movieContainer, "izquierda");
+  addArrow(movieContainer, "derecha");
+};
+
+const showMovie = (movie: Movie, movieContainer: HTMLDivElement): void => {
+  const divPelicula = createContainer(classNames.movie, movieContainer);
   divPelicula.innerHTML = `
-  <img src ="${pelicula.imagen}" alt="${pelicula.titulo}" />
-  <h3>${pelicula.titulo}</h3>
+  <img src ="${movie.image}" alt="${movie.title}" />
+  <h3>${movie.title}</h3>
   `;
 };
 
-const pintarPeliculas = (
-  peliculas: Pelicula[],
-  peliculaContenedor: HTMLDivElement
-) : void => {
-peliculas.forEach((pelicula) => {
-  pintarPelicula(pelicula, peliculaContenedor);
-});
+const showMovies = (movies: Movie[], movieContainer: HTMLDivElement): void => {
+  movies.forEach((pelicula) => {
+    showMovie(pelicula, movieContainer);
+  });
 };
 
-export const pintarListaPeliculas = (
-  // tituloSeccion: string, //borrado as dentro de la config
-  listaPeliculas: Pelicula[],
-  configuracion: ListaPeliculasConfiguracion
+export const showMovieList = (
+  movieList: Movie[],
+  configuration: movieListConfig
 ): void => {
-  //obtener el div principal
   const appDiv = document.getElementById("principal");
-  //comprobar que existe
   if (appDiv && appDiv instanceof HTMLDivElement) {
-    //crear un div para las peliculas
-    const crearDivPeliculas = crearContenedor(nombreClases.peliculas, appDiv);
-    //anadir el div de pelis al div principal
-    //appDiv.appendChild(crearDivPeliculas); //a no hace falta
+    const createMovieDiv = createContainer(classNames.movies, appDiv);
 
-    //crear un titulo 
-    agregarTitulo(configuracion.titulo, crearDivPeliculas);
-    //borrado esta seccion cos replaced above
-    //const titulo = crearTitulo(tituloSeccion); 
-    //anadir el titulo al div de peliculas
-    //crearDivPeliculas.appendChild(titulo);
+    addTitle(configuration.title, createMovieDiv);
 
-    //crear un div lista de peliculas
-    const divListaPeliculas = crearContenedor(nombreClases.listaPeliculas, crearDivPeliculas);
-    //añadir div lista de pelis al div de pelis
-    //crearDivPeliculas.appendChild(divListaPeliculas);
+    const movieListDiv = createContainer(classNames.movieList, createMovieDiv);
 
-    //crear div contenedor de peliculas
-    const divPeliculasContenedor = crearContenedor(
-      nombreClases.peliculasContenedor, divListaPeliculas
+    const movieContainerDiv = createContainer(
+      classNames.moviesContainer,
+      movieListDiv
     );
-    //añadir div contenedor de pelis al div lista de pelis
-    //divListaPeliculas.appendChild(divPeliculasContenedor); //borrado cos we aded the divListaPeliculas
 
-    //anadir flechas
-    pintarFlechas(divPeliculasContenedor);
-    // añadirFlecha(divPeliculasContenedor, 'izquierda');
-    // añadirFlecha(divPeliculasContenedor, 'derecha');
+    showArrows(movieContainerDiv);
 
-    const peliculasFiltradas = filtrarPeliculas(
-      listaPeliculas, 
-      configuracion.filtro);
+    const filteredMovies = filterMovies(movieList, configuration.filter);
 
-    //pintar peliculas
-    // listaPeliculas.forEach((pelicula) => {
-    //   //crear div peli
-    //   const divPelicula = crearContenedor(nombreClases.pelicula, divPeliculasContenedor); //this is a string cos there is no var called peli... its the name of the class. b adding second argument we can get rid of the append child
-    //   //añadir datos a la pelicula
-    //   divPelicula.innerHTML = 
-    //   `<img src ="${pelicula.imagen}" alt="${pelicula.titulo}" />
-    //   <h3>${pelicula.titulo}</h3>
-    //   `;
-      //anadir div peli al di comntenedor de pelis
-      //divPeliculasContenedor.appendChild(divPelicula);
-   // });
-   pintarPeliculas(peliculasFiltradas, divPeliculasContenedor);
+    showMovies(filteredMovies, movieContainerDiv);
   } else {
-    console.error("No se encontró el elemento");
+    console.error("Element not found");
   }
 };
-
-//create an obj that stores the names of the class's so that ifwe have to change a class name, we onl have to change in one place

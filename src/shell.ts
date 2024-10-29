@@ -1,39 +1,39 @@
-import { peliculas } from "./datos";
+import { movies } from "./data";
 
-import { pintarListaPeliculas } from "./ui";
+import { showMovieList } from "./ui";
 
 document.addEventListener("DOMContentLoaded", () => {
- pintarListaPeliculas(peliculas, {titulo: 'Todas las peliculas'}); //titulo de la seccion es todas las..., pelis is the array
- pintarListaPeliculas(peliculas, 
+ showMovieList(movies, {title: 'Todas las peliculas'});
+ showMovieList(movies, 
     {
-        titulo: 'Peliculas de aventuras',
-        filtro: {genero: 'Aventuras', caracteristica: 'genero'},
+        title: 'Adventure Movies',
+        filter: {genre: 'Aventuras', characteristic: 'genero'},
  });
- pintarListaPeliculas(peliculas, 
+ showMovieList(movies, 
     {
-        titulo: 'Peliculas Familiares',
-        filtro: {genero: 'Familiar', caracteristica: 'genero'},
+        title: 'Family Movies',
+        filter: {genre: 'Familiar', characteristic: 'genero'},
  });
- pintarListaPeliculas(peliculas, 
+ showMovieList(movies, 
     {
-        titulo: 'Peliculas de Animación',
-        filtro: {genero: 'Animacion', caracteristica: 'genero'},
+        title: 'Animated Movies',
+        filter: {genre: 'Animacion', characteristic: 'genero'},
  });
 
- pintarListaPeliculas(peliculas, 
+ showMovieList(movies, 
     {
-        titulo: 'Peliculas Premiadas',
-        filtro: {caracteristica: 'premios'},
+        title: 'Award-winning Movies',
+        filter: {characteristic: 'premios'},
         
  });
- pintarListaPeliculas(peliculas, 
+ showMovieList(movies, 
     {
-        titulo: 'Más Vistas',
-        filtro: {caracteristica: 'masVistas'},
+        title: 'Most viewed',
+        filter: {characteristic: 'masVistas'},
  });
- pintarListaPeliculas(peliculas, 
+ showMovieList(movies, 
     {
-        titulo: 'Mejor calificadas',
-        filtro: {caracteristica: 'calificacion'},
+        title: 'Best rated',
+        filter: {characteristic: 'calificacion'},
  });
 });

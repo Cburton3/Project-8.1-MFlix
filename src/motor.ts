@@ -1,46 +1,42 @@
-import { FiltroPeliculas, Pelicula, TipoGenero } from "./modelo";
+import { FilterMovies, Movie, movieGenre } from "./model";
 
-export const filtrarPeliculasPorGenero = (
-    peliculas: Pelicula[],
-    genero?: TipoGenero
-): Pelicula[] => peliculas.filter((pelicula) => pelicula.genero === genero);// i think the last genero was the same as 'animacion etc...'
-//RE filter creates a new array if pass a test provided by a function.  It takes each pelicula (movie) object from the array and checks if its genero property (genre) matches the genero variable.
-// it checks if the genero property of the movie object is equal to the value stored in the genero variable.
-//If the genero property matches the genero variable, the movie object is included in the new array returned by filter().
+export const filterMoviesByGenre = (
+    movies: Movie[],
+    genre?: movieGenre
+): Movie[] => movies.filter((movie) => movie.genre === genre);
 
-export const filtrarPeliculasPorPremio = (
-    peliculas: Pelicula[],
-    //caracteristica : premioGalardon;
-): Pelicula[] => peliculas.filter((pelicula) => pelicula.premioGalardon === true);
+export const filterMoviesbyAwards = (
+    movies: Movie[],
+): Movie[] => movies.filter((movie) => movie.galardonAward === true);
 
-const filtrarPeliculasMasVistas = (
-peliculas: Pelicula[],
-): Pelicula[] => peliculas.filter((pelicula) => pelicula.masVisto);
+const FilterMostSeenMovies = (
+movies: Movie[],
+): Movie[] => movies.filter((movie) => movie.mostSeen);
 
-const ordenarPeliculasPorCalificacion = (
-    peliculas: Pelicula[],
-    ): Pelicula[] => peliculas.sort((peliculaA, peliculaB) => peliculaB.calificacionImdb - peliculaA.calificacionImdb);
+const rankMovies = (
+    movies: Movie[],
+    ): Movie[] => movies.sort((movieA, movieB) => movieB.rankingImdb - movieA.rankingImdb);
 
 
-export const filtrarPeliculas = (
-    peliculas: Pelicula[],
-    filtro?: FiltroPeliculas
-): Pelicula[] => {
-    if(!filtro) return peliculas;
+export const filterMovies = (
+    movies: Movie[],
+    filter?: FilterMovies
+): Movie[] => {
+    if(!filter) return movies;
 
-    switch(filtro.caracteristica) { //by adding these param, only these strings  can beused
+    switch(filter.characteristic) { 
         case 'genero': 
-        return filtrarPeliculasPorGenero(peliculas, filtro.genero);
+        return filterMoviesByGenre(movies, filter.genre);
         case 'premios':
-        return filtrarPeliculasPorPremio(peliculas); //no second param here and none used in fx
+        return filterMoviesbyAwards(movies); 
         case 'masVistas':
-        return filtrarPeliculasMasVistas(peliculas);
+        return FilterMostSeenMovies(movies);
         case 'calificacion':
-        return ordenarPeliculasPorCalificacion(peliculas);
+        return rankMovies(movies);
     
         default: 
-            return peliculas;
-    };   //this returns a list of pelis en funcion a lo que digamos que haga que usa el interface esa
+            return movies;
+    };  
 };
 
 
